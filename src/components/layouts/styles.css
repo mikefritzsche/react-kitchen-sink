@@ -1,5 +1,5 @@
 .layouts-container {
-  width: 100%;
+  padding: 20px
 }
 .react-grid-layout {
   position: relative;
@@ -8,6 +8,9 @@
 .react-grid-item {
   transition: all 200ms ease;
   transition-property: left, top;
+  justify-content: center;
+  display: flex;
+  align-items: center;
 }
 .react-grid-item.cssTransforms {
   transition-property: transform;

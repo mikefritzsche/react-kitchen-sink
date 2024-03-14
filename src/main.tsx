@@ -5,7 +5,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-
+import './helpers/chartjs'
 import Root from './routes/root.tsx';
 import App from './App.tsx';
 import ErrorPage from "./routes/error-page";

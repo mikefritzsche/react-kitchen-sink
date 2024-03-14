@@ -1,31 +1,15 @@
 import {Link} from "react-router-dom";
-import {Responsive, WidthProvider} from "react-grid-layout";
+import RGL, { WidthProvider } from "react-grid-layout";
 
-const ResponsiveGridLayout = WidthProvider(Responsive);
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+const ReactGridLayout = WidthProvider(RGL);
+// import {Responsive, WidthProvider} from "react-grid-layout";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
-import {Bar, Doughnut} from 'react-chartjs-2';
-import faker from 'faker';
-
+import './LayoutStyles.scss'
 import './styles.css'
-import {uniqueId} from "lodash";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+
+import Aggregate from "./components/modules/aggregate";
+import {Button} from "@mui/material";
 
 export function LayoutsList() {
   return (
@@ -34,41 +18,6 @@ export function LayoutsList() {
       <div><Link to={'/layouts/my-custom-layout'}>My Custom Layout</Link></div>
     </div>
   )
-}
-
-type ModuleConfig = {
-  config: {
-    type: string
-  }
-  [key: string]: unknown
-}
-
-function Aggregate(props: ModuleConfig) {
-  return (
-    <div style={{padding: 10}}>
-      {props.config.type === 'bar' && <BarModule {...props} />}
-      {props.config.type === 'donut' && <DonutModule {...props} />}
-    </div>)
-}
-
-function BarModule(props: ModuleConfig) {
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-      title: {
-        display: true,
-        text: 'Chart.js Bar Chart',
-      },
-    },
-  };
-  return (<div style={{height: '100%', width: '100%'}}><Bar id={uniqueId()} data={barData()} options={options}/></div>)
-}
-
-function DonutModule(props: ModuleConfig) {
-  return (<div style={{padding: 10}}>Donut - {JSON.stringify(props)}</div>)
 }
 
 const components = {
@@ -122,39 +71,6 @@ const donutData = {
   ],
 };
 
-const barLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July']
-const barDataSets = [
-  {
-    label: 'Dataset 1',
-    data: barLabels.map(() => faker.datatype.number({min: 0, max: 1000})),
-    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-  },
-  {
-    label: 'Dataset 2',
-    data: barLabels.map(() => faker.datatype.number({min: 0, max: 1000})),
-    backgroundColor: 'rgba(53, 162, 235, 0.5)',
-  },
-]
-const barData = () => {
-  const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-  return {
-    labels,
-    datasets: [
-      {
-        label: 'Dataset 1',
-        data: labels.map(() => faker.datatype.number({min: 0, max: 1000})),
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      },
-      {
-        label: 'Dataset 2',
-        data: labels.map(() => faker.datatype.number({min: 0, max: 1000})),
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      },
-    ],
-  };
-};
-
 const lineData = {
   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
   datasets: [
@@ -182,48 +98,84 @@ const lineData = {
   ]
 };
 
-const LayoutsData = {
-  default: [],
-  'home': [],
-  'my-custom-layout': [],
-}
-
-function fetchLayoutData(layoutId: string) {
-  return Promise.resolve()
-}
-
 const layouts: Record<string, string | unknown> = {
   default: {
     title: 'Default',
     gridItems: [
       {
         id: 1,
-        layout: [{i: '1', x: 0, y: 0, w: 5, h: 2, static: true}],
-        name: "Item One", type: 'aggregate', config: {type: 'bar'}
+        name: "Item One",
+        type: 'aggregate',
+        config: {
+          type: 'bar'
+        }
       },
+    ],
+    layout: [
+      {i: '1', x: 0, y: 0, w: 5, h: 2}
     ],
   },
   'home': {
     title: 'Home',
     gridItems: [
-      {id: 1, layout: [{i: '1', x: 0, y: 0, w: 5, h: 2,  static: true}], name: "Item One", type: 'aggregate', config: {type: 'bar'}},
-      {id: 2, layout: [{i: '2', x: 5, y: 0, w: 3, h: 2,  static: true}], name: "Item Two", type: 'aggregate', config: {type: 'donut'}},
-      {id: 3, layout: [{i: '3', x: 8, y: 0, w: 3, h: 2,  static: true}], name: "Item Three", type: 'aggregate', config: {type: 'bar'}},
+      {
+        id: '8418a81d-7c74-4b8d-8f48-50393131a232',
+        name: "Item One",
+        type: 'aggregate',
+        config: {
+          type: 'bar',
+          dataType: 'health'
+        }
+      },
+      {
+        id: 'a2fd87f3-a939-47ca-9d39-0faf5ea37f39',
+        name: "Item Two",
+        type: 'aggregate',
+        config: {
+          type: 'donut',
+          dataType: 'health'
+        }
+      },
+      {
+        id: '4361ef87-cb20-48d3-bd37-90b0418ead45',
+        name: "Item Three",
+        type: 'aggregate',
+        config: {
+          type: 'bar',
+          dataType: 'months'
+        }
+      },
     ],
+    layout: [
+      {i: '8418a81d-7c74-4b8d-8f48-50393131a232', x: 0, y: 0, w: 5, h: 2},
+      {i: 'a2fd87f3-a939-47ca-9d39-0faf5ea37f39', x: 5, y: 0, w: 3, h: 2},
+      {i: '4361ef87-cb20-48d3-bd37-90b0418ead45', x: 8, y: 0, w: 3, h: 2},
+    ]
   },
   'my-custom-layout': {
     title: 'My Custom Layout',
     gridItems: [
-      {id: 1, layout: [{i: '1', x: 0, y: 0, w: 5, h: 2,  static: true}], name: "Item One", type: 'aggregate', config: {type: 'bar'}},
-      {id: 2, layout: [{i: '2', x: 5, y: 0, w: 3, h: 2,  static: true}], name: "Item Two", type: 'aggregate', config: {type: 'donut'}},
-      {id: 3, layout: [{i: '3', x: 8, y: 0, w: 3, h: 2,  static: true}], name: "Item Three", type: 'aggregate', config: {type: 'bar'}},
-      {id: 4, layout: [{i: '4', x: 0, y: 3, w: 5, h: 2,  static: true}], name: "Item Four", type: 'aggregate', config: {type: 'donut'}},
-      {id: 5, layout: [{i: '5', x: 5, y: 3, w: 3, h: 2,  static: true}], name: "Item Five", type: 'aggregate', config: {type: 'bar'}},
-      {id: 6, layout: [{i: '6', x: 8, y: 3, w: 3, h: 2,  static: true}], name: "Item Six", type: 'aggregate', config: {type: 'donut'}},
-      {id: 7, layout: [{i: '7', x: 0, y: 6, w: 5, h: 2,  static: true}], name: "Item Seven", type: 'aggregate', config: {type: 'bar'}},
-      {id: 8, layout: [{i: '8', x: 5, y: 6, w: 3, h: 2,  static: true}], name: "Item Eight", type: 'aggregate', config: {type: 'donut'}},
-      {id: 9, layout: [{i: '9', x: 8, y: 6, w: 3, h: 2,  static: true}], name: "Item Nine", type: 'aggregate', config: {type: 'donut'}}
+      {id: 1, name: "Item One", type: 'aggregate', config: {type: 'bar'}},
+      {id: 2, name: "Item Two", type: 'aggregate', config: {type: 'donut'}},
+      {id: 3, name: "Item Three", type: 'aggregate', config: {type: 'bar'}},
+      {id: 4, name: "Item Four", type: 'aggregate', config: {type: 'donut'}},
+      {id: 5, name: "Item Five", type: 'aggregate', config: {type: 'bar'}},
+      {id: 6, name: "Item Six", type: 'aggregate', config: {type: 'donut'}},
+      {id: 7, name: "Item Seven", type: 'aggregate', config: {type: 'bar'}},
+      {id: 8, name: "Item Eight", type: 'aggregate', config: {type: 'donut'}},
+      {id: 9, name: "Item Nine", type: 'aggregate', config: {type: 'donut'}}
     ],
+    layout: [
+      {i: '1', x: 0, y: 0, w: 5, h: 2,  static: true},
+      {i: '2', x: 5, y: 0, w: 3, h: 2,  static: true},
+      {i: '3', x: 8, y: 0, w: 3, h: 2,  static: true},
+      {i: '4', x: 0, y: 3, w: 5, h: 2,  static: true},
+      {i: '5', x: 5, y: 3, w: 3, h: 2,  static: true},
+      {i: '6', x: 8, y: 3, w: 3, h: 2,  static: true},
+      {i: '7', x: 0, y: 6, w: 5, h: 2,  static: true},
+      {i: '8', x: 5, y: 6, w: 3, h: 2,  static: true},
+      {i: '9', x: 8, y: 6, w: 3, h: 2,  static: true},
+    ]
   }
 }
 
@@ -241,32 +193,39 @@ function DynamicModuleComponent(props) {
 }
 
 export default function Layout({layoutId}: { layoutId: string }) {
-  const [isEditing, setIsEditing] = useState(true)
-  if (!isEditing) {
-    layouts[layoutId].gridItems.layout.map((item: any) => {
-      item.static = true
-      return item
-    })
-  }
+  const [isEditing, setIsEditing] = useState(false)
+  const [ editText, setEditText ] = useState('')
+
+  useEffect(() => {
+    setEditText(isEditing ? 'Save Layout' : 'Edit Layout')
+  }, [])
+  useEffect(() => {
+    setEditText(isEditing ? 'Save Layout' : 'Edit Layout')
+  }, [isEditing])
   return <div className="layouts-container">
-    <ResponsiveGridLayout
+    <Button
+      size="small"
+      variant="outlined"
+      onClick={() => setIsEditing(!isEditing)}
+    >
+      {editText} - {isEditing ? 'On' : 'Off'}
+    </Button>
+    <ReactGridLayout
       className="layout"
-      layouts={{lg: layouts[layoutId].gridItems.layout ?? []}}
-      breakpoints={{lg: 1200}}
-      cols={{lg: 12}}
+      layout={layouts[layoutId].layout}
       onDragStop={onMoveCard}
       onResizeStop={onResizeCard}
       // draggableCancel={isEditing ? '.MyNonDraggableAreaClassName' : ''}
-      // isResizable={!isEditing}
-      // isDraggable={!isEditing}
+      isResizable={isEditing}
+      isDraggable={isEditing}
     >
-      {layouts[layoutId].gridItems.map((item, i) => {
+      {layouts[layoutId].gridItems.map((item) => {
         return (
           <div key={item.id} className="grid-item">
             <DynamicModuleComponent {...item} />
           </div>
         );
       })}
-    </ResponsiveGridLayout>
+    </ReactGridLayout>
   </div>
 }
